@@ -12,7 +12,7 @@ def subtract(x, y):
   return x - y
 
 def test_subtract():
-    assert subtract(5, 2) == 3
+    assert subtract(6, 2) == 4
     assert subtract(2, 1) == 1
 
 def multiply(x, y):
