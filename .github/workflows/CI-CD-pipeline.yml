@@ -24,11 +24,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Lint code
+        run: npx eslint .
+
       - name: Build the application
         run: npm run build
 
       - name: Run unit tests
         run: npm run test
+
+      - name: Measure code coverage
+        run: npx nyc npm run test
 
       - name: Upload test results
         uses: actions/upload-artifact@v3
@@ -56,6 +62,19 @@ jobs:
             fi
           fi
 
+      - name: Increment version number
+        run: npm version patch
+
       - name: Deploy to production
         run: |
           ./gradlew deploy
+          echo "Deployment log:"
+          cat deployment.log
+
+      - name: Send email notification if deployment fails
+        uses: actions/mail@v3
+        if: ${{ failure() }}
+        with:
+          to: 'your-email@example.com'
+          subject: 'Deployment failed'
+          body: 'The deployment of your application failed. Please check the deployment log for more details.'
